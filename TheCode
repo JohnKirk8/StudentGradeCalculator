@@ -1,0 +1,54 @@
+import java.io.*;
+import java.util.*;
+
+public class StudentGradeCalculator {
+    public static void main(String[] args) {
+        String filename = "grades.txt";
+        List<String> students = new ArrayList<>();
+        List<Integer> grades = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ");
+                if (parts.length != 2) {
+                    System.out.println("Invalid line: " + line);
+                    continue;
+                }
+
+                String name = parts[0];
+                int grade;
+
+                try {
+                    grade = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid grade for " + name + ": " + parts[1]);
+                    continue;
+                }
+
+                students.add(name);
+                grades.add(grade);
+            }
+
+            if (!grades.isEmpty()) {
+                int total = 0;
+                for (int grade : grades) {
+                    total += grade;
+                }
+                double average = (double) total / grades.size();
+
+                System.out.println("Student Grades:");
+                for (int i = 0; i < students.size(); i++) {
+                    System.out.println(students.get(i) + " " + grades.get(i));
+                }
+                System.out.printf("Average %.2f\n", average);
+            } else {
+                System.out.println("No valid grades found.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+}
